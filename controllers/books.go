@@ -3,8 +3,9 @@ package controllers
 import (
 	"net/http"
 
+	"gin-bookstore/models"
+
 	"github.com/gin-gonic/gin"
-	"github.com/rahmanfadhil/gin-bookstore/models"
 )
 
 type CreateBookInput struct {
@@ -23,7 +24,7 @@ func FindBooks(c *gin.Context) {
 	var books []models.Book
 	models.DB.Find(&books)
 
-	c.JSON(http.StatusOK, gin.H{"data": books})
+	c.JSON(http.StatusOK, books)
 }
 
 // GET /books/:id
@@ -32,11 +33,11 @@ func FindBook(c *gin.Context) {
 	// Get model if exist
 	var book models.Book
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&book).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found!"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": book})
+	c.JSON(http.StatusOK, book)
 }
 
 // POST /books
@@ -53,7 +54,7 @@ func CreateBook(c *gin.Context) {
 	book := models.Book{Title: input.Title, Author: input.Author}
 	models.DB.Create(&book)
 
-	c.JSON(http.StatusOK, gin.H{"data": book})
+	c.JSON(http.StatusCreated, book)
 }
 
 // PATCH /books/:id
@@ -62,7 +63,7 @@ func UpdateBook(c *gin.Context) {
 	// Get model if exist
 	var book models.Book
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&book).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Record not found!"})
 		return
 	}
 
@@ -90,5 +91,5 @@ func DeleteBook(c *gin.Context) {
 
 	models.DB.Delete(&book)
 
-	c.JSON(http.StatusOK, gin.H{"data": true})
+	c.JSON(http.StatusNoContent, nil)
 }
