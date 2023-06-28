@@ -7,3 +7,11 @@ How to use:
 ```
 $ go run main.go
 ```
+
+
+How to compile into binary: 
+
+```
+go mod download
+go build -o /bookstore/app
+```
