@@ -76,7 +76,7 @@ func UpdateBook(c *gin.Context) {
 
 	models.DB.Model(&book).Updates(input)
 
-	c.JSON(http.StatusOK, gin.H{"data": book})
+	c.JSON(http.StatusOK, book)
 }
 
 // DELETE /books/:id
